@@ -48,3 +48,36 @@ test('Scenario 4: Load Delay', async ({ page }) => {
 
   await expect(delayedButton).toBeVisible();
 });
+
+test('Scenario 5: Ajax Data', async ({ page }) => {
+  await page.goto('http://uitestingplayground.com/ajax');
+
+  // Search the button 'Button Triggering AJAX Request' and click it
+  const ajaxButton = page.locator('#ajaxButton');
+  await ajaxButton.click();
+
+  const ajaxResult = page.locator('p:has-text("Data loaded with AJAX get request")');
+  await expect(ajaxResult).toBeVisible({ timeout: 20000 });
+});
+
+test('Scenario 6: Client Side Delay', async ({ page }) => {
+  await page.goto('http://uitestingplayground.com/clientdelay');
+
+  // Search the button 'Button Triggering Client Side Delay' and wait for data to appear (15 seconds)
+  const clientDelayButton = page.locator('#ajaxButton');
+  await clientDelayButton.click();
+
+  const clientDelayResult = page.locator('p:has-text("Data calculated on the client side.")');
+  await expect(clientDelayResult).toBeVisible({ timeout: 20000 });
+});
+
+test('Scenario 7: DOM Click Event', async ({ page }) => {
+  await page.goto('http://uitestingplayground.com/click');
+
+  // Click the blue button and make sure the green button is visible after the click
+  const blueButton = page.locator('button.btn-primary');
+  await blueButton.click();
+
+  const greenButton = page.locator('button.btn-success');
+  await expect(greenButton).toBeVisible();
+});
