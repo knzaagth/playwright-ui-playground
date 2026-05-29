@@ -81,3 +81,41 @@ test('Scenario 7: DOM Click Event', async ({ page }) => {
   const greenButton = page.locator('button.btn-success');
   await expect(greenButton).toBeVisible();
 });
+
+test('Scenario 8: Text Input', async ({ page }) => {
+  await page.goto('http://uitestingplayground.com/textinput');
+
+  await page.locator('input.form-control').fill('Test Button');
+  await page.locator('button.btn-primary').click();
+
+  const changedButton = page.locator('button:has-text("Test Button")');
+  await expect(changedButton).toBeVisible();
+});
+
+test('Scenario 9: Scrollbars', async ({ page }) => {
+  await page.goto('http://uitestingplayground.com/scrollbars');
+
+  const hidingButton = page.locator('#hidingButton');
+  await hidingButton.click();
+  await expect(hidingButton).toBeVisible();
+});
+
+test('Scenario 10: Dynamic Table', async ({ page }) => {
+  await page.goto('http://uitestingplayground.com/dynamictable');
+
+  const yellowLabelText = await page.locator('p.bg-warning').innerText();
+  console.log(`Yellow label text: ${yellowLabelText}`);
+
+  const allHeaders = page.locator('span[role="columnheader"]');
+  const headersList = await allHeaders.allInnerTexts();
+  const cpuIndex = headersList.indexOf('CPU');
+
+  const chromeRow = page.locator('div[role="row"]').filter({ has: page.locator('span', { hasText: 'Chrome' }) });
+
+  const cpuCell = chromeRow.locator('span[role="cell"]').nth(cpuIndex);
+  const cpuTableValue = await cpuCell.innerText();
+
+  console.log(`Nilai CPU Chrome di Tabel: ${cpuTableValue}`);
+
+  expect(yellowLabelText).toContain(cpuTableValue);
+});
